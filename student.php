@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Öğrenci Tablosu</title>
 </head>
+ 
 
 <body>
 
@@ -205,6 +206,9 @@
                         // Turn all tds to contenteditable at the same row
                         currentRow.querySelectorAll('[data-col]').forEach(col => {
                             col.contentEditable = true
+                            col.style.backgroundColor ="silver";
+
+                            
                         })
                     }
                     else if (e.target.getAttribute('data-action') === 'save') {
@@ -217,6 +221,7 @@
 
                         currentRow.querySelectorAll('[data-col]').forEach(col => {
                             col.contentEditable = false
+                            col.style.backgroundColor ="white";
                         })
                         saveRow(sid, newFname, newlname, newDogumYeri, newDogumTarihi);
 
@@ -307,6 +312,31 @@
             }, (err) => {
                 console.log("Error:", err);
             })
+        }
+
+ function saveRow(sid, newFname, newlname, newDogumYeri, newDogumTarihi) {
+
+            var table = document.getElementById("studentsTable");
+
+            const params = new URLSearchParams();
+            params.append('sid', sid);
+            params.append('newfname', newFname);
+            params.append('newlname', newlname);
+            params.append('newDogumYeri', newDogumYeri);
+            params.append('newDogumTarihi', newDogumTarihi);
+
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "update_student.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    var response = xhr.responseText;
+                    alert(response);
+                }
+            };
+            xhr.send("sid=" + sid + "&isim=" + newFname + "&soyisim=" + newlname + "&dogumYeri=" + newDogumYeri + "&dogumTarihi=" + newDogumTarihi);
+
         }
 
 
